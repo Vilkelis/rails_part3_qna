@@ -1,0 +1,71 @@
+AllCops:
+  DisplayCopNames: true
+  TargetRubyVersion: 2.6
+  # Exclude Rails generated files
+  Exclude:
+    - 'bin/*'
+    - 'db/seeds.rb'
+    - 'db/schema.rb'
+    - 'Gemfile'
+    - 'Rakefile'
+    - 'node_modules/**/*'
+    - 'config/initializers/devise.rb'
+
+Metrics/LineLength:
+  Enabled: true
+  # Exclude Rails generated files
+  Exclude:
+  - 'test/test_helper.rb'
+  - 'app/jobs/application_job.rb'
+  - 'config/initializers/backtrace_silencers.rb'
+  - 'config/initializers/wrap_parameters.rb'
+  - 'config/initializers/content_security_policy.rb'
+  - 'config/environments/test.rb'
+  - 'config/environments/development.rb'
+  - 'config/environments/production.rb'
+  - 'config/puma.rb'
+  - 'config/application.rb'
+  - 'db/migrate/*.rb'
+  - 'app/jobs/application_job.rb'
+  - 'config/environments/*.rb'
+  - 'config/initializers/*.rb'
+  - 'config/*.rb'
+
+Style/StringLiterals:
+  # Exclude Rails generated files
+  Exclude:
+  - 'test/application_system_test_case.rb'
+  - 'test/channels/application_cable/connection_test.rb'
+  - 'config/puma.rb'
+  - 'config/spring.rb'
+  - 'config/environments/production.rb'
+
+Style/ClassAndModuleChildren:
+  Enabled: false
+  # Exclude Rails generated files
+  Exclude:
+  - 'test/test_helper.rb'
+  - 'test/channels/application_cable/connection_test.rb'
+
+Style/Documentation:
+  # Exclude Rails generated files
+  Exclude:
+    - 'app/helpers/application_helper.rb'
+    - 'app/models/application_record.rb'
+    - 'app/mailers/application_mailer.rb'
+    - 'config/application.rb'
+    - 'test/application_system_test_case.rb'
+    - 'test/test_helper.rb'
+Metrics/MethodLength:
+  Max: 20
+
+Metrics/AbcSize:
+  Exclude:
+    - 'db/migrate/*.rb'
+
+Metrics/BlockLength:
+  Exclude:
+    - 'config/routes.rb'
+    - 'config/environments/production.rb'
+
+

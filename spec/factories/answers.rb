@@ -2,8 +2,11 @@
 
 FactoryBot.define do
   factory :answer do
-    body { 'MyText' }
-    question_id { 'MyString' }
-    relation { 'MyString' }
+    body { 'MyAnswerText' }
+    question
+
+    trait :invalid do
+      body { nil }
+    end
   end
 end

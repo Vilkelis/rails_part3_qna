@@ -59,6 +59,9 @@ Style/Documentation:
 Metrics/MethodLength:
   Max: 20
 
+Metrics/LineLength:
+  Max: 100
+
 Metrics/AbcSize:
   Exclude:
     - 'db/migrate/*.rb'
@@ -67,5 +70,6 @@ Metrics/BlockLength:
   Exclude:
     - 'config/routes.rb'
     - 'config/environments/production.rb'
+    - 'spec/**/*.rb'
 
 

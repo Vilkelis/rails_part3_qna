@@ -9,5 +9,6 @@ RSpec.describe Answer, type: :model do
 
   describe 'validations' do
     it { should validate_presence_of(:body) }
+    it { should validate_presence_of(:user) }
   end
 end

@@ -14,10 +14,9 @@ feature 'User can view questions', '
   background { visit questions_path }
 
   scenario 'User tries to view question list' do
-    expect(page).to have_content 'MyQuestionTitle1'
-    expect(page).to have_content 'MyQuestionTitle2'
-    expect(page).to have_content 'MyQuestionTitle3'
-    expect(page).to have_content 'MyQuestionTitle4'
+    (1..4).each do |i|
+      expect(page).to have_content "MyQuestionTitle#{i}"
+    end
   end
 
   scenario 'User select question from list and view question with answers' do

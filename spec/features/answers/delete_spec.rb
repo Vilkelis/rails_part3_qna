@@ -25,9 +25,7 @@ but can't delete not owned him answers.
       visit root_path
       click_on answer.question.title
 
-      click_on 'Delete answer'
-
-      expect(page).to have_content 'You can delete only your own answers.'
+      expect(page).to have_no_content 'Delete answer'
     end
   end
 
@@ -35,8 +33,6 @@ but can't delete not owned him answers.
     visit root_path
     click_on answer.question.title
 
-    click_on 'Delete answer'
-
-    expect(page).to have_content 'You need to sign in or sign up before continuing.'
+    expect(page).to have_no_content 'Delete answer'
   end
 end

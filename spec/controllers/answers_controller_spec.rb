@@ -6,19 +6,7 @@ RSpec.describe AnswersController, type: :controller do
   let(:question) { create(:question) }
   let(:user) { create(:user) }
   let(:answer) { create(:answer) }
-
-  describe 'GET #new' do
-    before { login(user) }
-    before { get :new, params: { question_id: question } }
-
-    it 'assigns new answer to @answer' do
-      expect(assigns(:answer)).to be_a_new(Answer).with(question_id: question.id)
-    end
-
-    it 'renders new view' do
-      expect(response).to render_template :new
-    end
-  end
+  let(:invalid_user) { create(:user) }
 
   describe 'POST #create' do
     before { login(user) }
@@ -52,14 +40,20 @@ RSpec.describe AnswersController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before do
-      user = answer.user
-      login(user)
-    end
+    it 'author of the answer tries to delete the answer' do
+      valid_user = answer.user
+      login(valid_user)
 
-    it 'deletes an answer from the database' do
       expect { delete :destroy, params: { id: answer } }
         .to change(Answer, :count).by(-1)
+    end
+
+    it 'not the author of the answer tries to delete the answer' do
+      answer
+      login(invalid_user)
+
+      expect { delete :destroy, params: { id: answer } }
+        .to change(Answer, :count).by(0)
     end
   end
 end

@@ -6,26 +6,22 @@ class AnswersController < ApplicationController
   before_action :load_question, only: %i[new create]
   before_action :load_answer, only: %i[destroy]
 
-  def new
-    @answer = @question.answers.new
-  end
-
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
     if @answer.save
       redirect_to @question, notice: 'Answer created.'
     else
-      render '/questions/show'
+      render 'questions/show'
     end
   end
 
   def destroy
-    if current_user != @answer.user
-      redirect_to questions_path, alert: 'You can delete only your own answers.'
-    else
+    if current_user.author_of?(@answer)
       @answer.destroy!
       redirect_to questions_path, notice: 'Answer deleted successfully.'
+    else
+      redirect_to questions_path, alert: 'You can delete only your own answers.'
     end
   end
 

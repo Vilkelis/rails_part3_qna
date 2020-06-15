@@ -27,9 +27,8 @@ but can't delete not owned him questions.
 
       login(user)
       click_on 'Test question title'
-      click_on 'Delete question'
 
-      expect(page).to have_content 'You can delete only your own questions.'
+      expect(page).to have_no_content 'Delete question'
     end
   end
 
@@ -41,8 +40,6 @@ but can't delete not owned him questions.
     visit root_path
     click_on 'Test question title'
 
-    click_on 'Delete question'
-
-    expect(page).to have_content 'You need to sign in or sign up before continuing'
+    expect(page).to have_no_content 'Delete question'
   end
 end

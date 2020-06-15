@@ -3,7 +3,8 @@
 h1 =@question.title
 div =@question.body
 
-= link_to 'Delete question', question_path(@question), method: :delete
+- if current_user&.author_of?(@question)
+	= link_to 'Delete question', question_path(@question), method: :delete
 
 h2 Answers
 ul
@@ -11,7 +12,8 @@ ul
     - unless answer.new_record?
       li
       	= answer.body
-      	= link_to 'Delete answer', answer_path(answer), method: :delete
+      	- if current_user&.author_of?(answer)
+      	  = link_to 'Delete answer', answer_path(answer), method: :delete
 
 = render '/shared/errors', resource: @answer
 

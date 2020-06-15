@@ -28,11 +28,11 @@ class QuestionsController < ApplicationController
   end
 
   def destroy
-    if current_user != @question.user
-      redirect_to @question, alert: 'You can delete only your own questions.'
-    else
+    if current_user.author_of?(@question)
       @question.destroy!
       redirect_to questions_path, notice: 'Question deleted successfully.'
+    else
+      redirect_to @question, alert: 'You can delete only your own questions.'
     end
   end
 

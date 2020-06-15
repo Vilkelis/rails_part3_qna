@@ -6,6 +6,7 @@ RSpec.describe QuestionsController, type: :controller do
   let(:question) { create(:question) }
   let(:questions) { create_list(:question, 4) }
   let(:user) { create(:user) }
+  let(:invalid_user) { create(:user) }
 
   describe 'GET #new' do
     before { login(user) }
@@ -74,14 +75,18 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    before do
-      user = question.user
-      login(user)
-    end
-
-    it 'deletes a question from the database' do
+    it 'question author tries to delete question' do
+      valid_user = question.user
+      login(valid_user)
       expect { delete :destroy, params: { id: question } }
         .to change(Question, :count).by(-1)
+    end
+
+    it 'not author of the question tries to delete the question' do
+      question
+      login(invalid_user)
+      expect { delete :destroy, params: { id: question } }
+        .to change(Question, :count).by(0)
     end
   end
 end

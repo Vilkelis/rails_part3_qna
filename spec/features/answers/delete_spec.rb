@@ -11,27 +11,22 @@ but can't delete not owned him answers.
 
   describe 'Authenticated user' do
     scenario 'tries to delete your own answer' do
-      login(answer.user)
-      visit root_path
-      click_on answer.question.title
-
+      visit_question_page(answer.question, answer.user)
       click_on 'Delete answer'
 
+      expect(page).to have_no_content answer.body
       expect(page).to have_content 'Answer deleted successfully.'
     end
 
     scenario 'tries to delete not owned him question' do
-      login(another_user)
-      visit root_path
-      click_on answer.question.title
+      visit_question_page(answer.question, another_user)
 
       expect(page).to have_no_content 'Delete answer'
     end
   end
 
   scenario 'Unauthenticated user tries to delete answer' do
-    visit root_path
-    click_on answer.question.title
+    visit_question_page(answer.question)
 
     expect(page).to have_no_content 'Delete answer'
   end

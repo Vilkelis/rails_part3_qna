@@ -6,39 +6,27 @@ feature 'Only author can delete your own question', "
 Author can delete your own question,
 but can't delete not owned him questions.
 " do
-  given(:user) { create(:user) }
   given(:another_user) { create(:user) }
+  given(:question) { create(:question) }
 
   describe 'Authenticated user' do
     scenario 'tries to delete your own question' do
-      login(user)
-      go_to_new_question_form
-      create_question
+      visit_question_page(question, question.user)
       click_on 'Delete question'
 
+      expect(page).to have_no_content question.title
       expect(page).to have_content 'Question deleted successfully.'
     end
 
     scenario 'tries to delete not owned him question' do
-      login(another_user)
-      go_to_new_question_form
-      create_question
-      logout
-
-      login(user)
-      click_on 'Test question title'
+      visit_question_page(question, another_user)
 
       expect(page).to have_no_content 'Delete question'
     end
   end
 
   scenario 'Unauthenticated user tries to delete question' do
-    login(user)
-    go_to_new_question_form
-    create_question
-    logout
-    visit root_path
-    click_on 'Test question title'
+    visit_question_page(question)
 
     expect(page).to have_no_content 'Delete question'
   end

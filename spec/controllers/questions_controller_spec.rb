@@ -17,6 +17,10 @@ RSpec.describe QuestionsController, type: :controller do
       expect(assigns(:question)).to be_a_new(Question)
     end
 
+    it 'question user equals to logged user' do
+      expect(assigns(:question).user_id).to eq(user.id)
+    end
+
     it 'renders new view' do
       expect(response).to render_template :new
     end
@@ -29,6 +33,11 @@ RSpec.describe QuestionsController, type: :controller do
       it 'saves a new question in the database' do
         expect { post :create, params: { question: attributes_for(:question) } }
           .to change(Question, :count).by(1)
+      end
+
+      it 'question user equals to logged user' do
+        post :create, params: { question: attributes_for(:question) }
+        expect(assigns(:question).user_id).to eq(user.id)
       end
 
       it 'redirects to show view' do
@@ -75,18 +84,35 @@ RSpec.describe QuestionsController, type: :controller do
   end
 
   describe 'DELETE #destroy' do
-    it 'question author tries to delete question' do
-      valid_user = question.user
-      login(valid_user)
-      expect { delete :destroy, params: { id: question } }
-        .to change(Question, :count).by(-1)
+    context 'author of the question' do
+      before { login(question.user) }
+
+      it 'deletes question from the database' do
+        expect { delete :destroy, params: { id: question } }
+          .to change(Question, :count).by(-1)
+      end
+
+      it 'redirects to questions list' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to questions_path
+      end
     end
 
-    it 'not author of the question tries to delete the question' do
-      question
-      login(invalid_user)
-      expect { delete :destroy, params: { id: question } }
-        .to change(Question, :count).by(0)
+    context 'not the author of the question' do
+      before do
+        question
+        login(invalid_user)
+      end
+
+      it 'tries to delete the question' do
+        expect { delete :destroy, params: { id: question } }
+          .to change(Question, :count).by(0)
+      end
+
+      it 'redirects to question page' do
+        delete :destroy, params: { id: question }
+        expect(response).to redirect_to question
+      end
     end
   end
 end

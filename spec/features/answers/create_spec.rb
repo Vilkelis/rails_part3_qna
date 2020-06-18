@@ -6,14 +6,10 @@ feature 'Only authenticated user can create answer from question page', '
   Only authenticated user can create new answer for question from question page
 ' do
   given(:user) { create(:user) }
-
   given!(:question) { create(:question) }
 
   describe 'Authenticated user' do
-    background do
-      login(user)
-      visit question_path(question)
-    end
+    background { visit_question_page(question, user) }
 
     scenario 'tries to create new answer for question with correct attributes' do
       fill_in 'Body', with: 'Test answer for the question'
@@ -31,8 +27,7 @@ feature 'Only authenticated user can create answer from question page', '
   end
 
   scenario 'Unauthenticated user tries to create new answer' do
-    visit question_path(question)
-
+    visit_question_page(question)
     fill_in 'Body', with: 'Test answer for the question'
     click_on 'Create answer'
 

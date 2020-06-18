@@ -22,9 +22,8 @@ module FeaturesHelper
     click_on 'Create question'
   end
 
-  def create_question
-    fill_in 'Title', with: 'Test question title'
-    fill_in 'Body', with: 'Test question body'
-    click_on 'Create'
+  def visit_question_page(question, user = nil)
+    login(user) if user
+    visit(question_path(question))
   end
 end

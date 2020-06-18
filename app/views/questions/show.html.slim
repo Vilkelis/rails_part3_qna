@@ -1,21 +1,16 @@
-= render '/shared/errors', resource: @question
+= render 'shared/errors', resource: @question
 
-h1 =@question.title
-div =@question.body
+h1 = @question.title
+div = @question.body
 
 - if current_user&.author_of?(@question)
 	= link_to 'Delete question', question_path(@question), method: :delete
 
 h2 Answers
 ul
-  -@question.answers.each do |answer|
-    - unless answer.new_record?
-      li
-      	= answer.body
-      	- if current_user&.author_of?(answer)
-      	  = link_to 'Delete answer', answer_path(answer), method: :delete
+  = render @question.answers
 
-= render '/shared/errors', resource: @answer
+= render 'shared/errors', resource: @answer
 
 h3 New answer
 = form_with model: [@question, @answer], local: true do |f|

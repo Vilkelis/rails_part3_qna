@@ -21,6 +21,11 @@ RSpec.describe AnswersController, type: :controller do
         post :create, params: { answer: attributes_for(:answer), question_id: question }
         expect(response).to redirect_to assigns(:question)
       end
+
+      it 'user of created answer equals logged user' do
+        post :create, params: { answer: attributes_for(:answer), question_id: question }
+        expect(assigns(:answer).user_id).to eq(user.id)
+      end
     end
 
     context 'with invalid attributes' do
@@ -62,7 +67,7 @@ RSpec.describe AnswersController, type: :controller do
 
       it 'does not delete the answer from the database' do
         expect { delete :destroy, params: { id: answer } }
-          .to change(Answer, :count).by(0)
+          .to_not change(Answer, :count)
       end
 
       it 'redirects to the question page' do

@@ -9,6 +9,6 @@ class User < ApplicationRecord
   has_many :questions, dependent: :destroy
 
   def author_of?(object)
-    object.has_attribute?(:user_id) && object.user_id == id
+    object.try(:user_id) == id
   end
 end

@@ -8,30 +8,25 @@ RSpec.describe User, type: :model do
     it { should validate_presence_of(:password) }
   end
 
-  describe 'check author of' do
+  describe '#author_of' do
     let(:question) { create(:question) }
-    let(:answer) { create(:answer) }
     let(:invalid_user) { create(:user) }
 
-    context 'question' do
-      it 'user is valid author' do
-        valid_user = question.user
-        expect(valid_user.author_of?(question)).to be_truthy
-      end
-
+    context 'object without user_id attribute' do
       it 'user is invalid author' do
-        expect(invalid_user.author_of?(question)).to be_falsey
+        object = 'test'
+        expect(invalid_user).to_not be_author_of(object)
       end
     end
 
-    context 'answer' do
+    context 'object with user_id attribute' do
       it 'user is valid author' do
-        valid_user = answer.user
-        expect(valid_user.author_of?(answer)).to be_truthy
+        valid_user = question.user
+        expect(valid_user).to be_author_of(question)
       end
 
       it 'user is invalid author' do
-        expect(invalid_user.author_of?(answer)).to be_falsey
+        expect(invalid_user).to_not be_author_of(question)
       end
     end
   end

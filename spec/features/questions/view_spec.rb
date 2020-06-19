@@ -19,13 +19,16 @@ feature 'User can view questions', '
     end
   end
 
-  scenario 'User select question from list and view question with answers' do
+  scenario 'User selects question from list and views question with answers' do
     questions.each do |question|
       visit questions_path
       click_on question.title
 
       expect(page).to have_content question.title
       expect(page).to have_content question.body
+      question.answers.each do |answer|
+        expect(page).to have_content answer.body
+      end
     end
   end
 end

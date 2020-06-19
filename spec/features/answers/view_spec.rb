@@ -12,5 +12,9 @@ feature 'User can view answers to a question' do
   scenario 'User views question with answers' do
     expect(page).to have_content question.title
     expect(page).to have_content question.body
+
+    question.answers.each do |answer|
+      expect(page).to have_content answer.body
+    end
   end
 end

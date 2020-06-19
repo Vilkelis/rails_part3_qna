@@ -35,7 +35,7 @@ RSpec.describe QuestionsController, type: :controller do
           .to change(Question, :count).by(1)
       end
 
-      it 'question user equals to logged user' do
+      it 'user of created question equals to logged user' do
         post :create, params: { question: attributes_for(:question) }
         expect(assigns(:question).user_id).to eq(user.id)
       end
@@ -106,7 +106,7 @@ RSpec.describe QuestionsController, type: :controller do
 
       it 'tries to delete the question' do
         expect { delete :destroy, params: { id: question } }
-          .to change(Question, :count).by(0)
+          .to_not change(Question, :count)
       end
 
       it 'redirects to question page' do

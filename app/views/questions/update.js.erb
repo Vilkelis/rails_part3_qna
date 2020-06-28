@@ -1,0 +1,5 @@
+$('.question-errors').html('<%= render 'shared/errors', resource: @question %>');
+$('.flash').html('<%= j render 'shared/flash' %>');
+<% unless @question.errors.present? %>
+  $('.question > .question-data').html('<%= j render @question %>');
+<% end %>

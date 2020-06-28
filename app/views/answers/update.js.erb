@@ -1,0 +1,5 @@
+$('.answer-errors').html('<%= render 'shared/errors', resource: @answer %>');
+$('.flash').html('<%= j render 'shared/flash' %>');
+<% unless @answer.errors.present? %>
+  $('.answers-list > li[data-answer=<%= @answer.id %>]').replaceWith('<%= j render @answer %>');
+<% end %>

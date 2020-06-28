@@ -6,4 +6,6 @@ class Answer < ApplicationRecord
   belongs_to :user
 
   validates :body, presence: true
+
+  default_scope { order(best: :desc, created_at: :desc) }
 end

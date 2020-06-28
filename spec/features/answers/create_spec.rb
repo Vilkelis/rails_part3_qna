@@ -8,15 +8,18 @@ feature 'Only authenticated user can create answer from question page', '
   given(:user) { create(:user) }
   given!(:question) { create(:question) }
 
-  describe 'Authenticated user' do
+  describe 'Authenticated user', js: true do
     background { visit_question_page(question, user) }
 
     scenario 'tries to create new answer for question with correct attributes' do
       fill_in 'Body', with: 'Test answer for the question'
       click_on 'Create answer'
 
+      expect(current_path).to eq question_path(question)
       expect(page).to have_content 'Answer created.'
-      expect(page).to have_content 'Test answer for the question'
+      within '.answers' do
+        expect(page).to have_content 'Test answer for the question'
+      end
     end
 
     scenario 'tries to create new answer for question with incorrect attributes' do

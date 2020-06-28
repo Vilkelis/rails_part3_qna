@@ -10,7 +10,7 @@ but can't delete not owned him answers.
   given!(:answer) { create(:answer) }
 
   describe 'Authenticated user' do
-    scenario 'tries to delete your own answer' do
+    scenario 'tries to delete your own answer', js: true  do
       visit_question_page(answer.question, answer.user)
       click_on 'Delete answer'
 

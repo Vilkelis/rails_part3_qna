@@ -1,5 +1,14 @@
 - if answer.persisted?
-  li
+  li data={answer: answer.id}
     = answer.body
-  	- if current_user&.author_of?(answer)
-  	  = link_to 'Delete answer', answer_path(answer), method: :delete
+    - if answer.best?
+      span = 'The Best!'
+    - elsif current_user&.author_of?(answer.question)
+      = link_to 'Choose as the best', '#', class: 'choose-best-answer-link', data: {answer: answer.id}
+    - if current_user&.author_of?(answer)
+      = link_to 'Delete answer', answer_path(answer), method: :delete, remote: true
+      = link_to 'Edit answer', '#', class: 'edit-answer-link', data: {answer: answer.id}
+      = form_with model: answer, class: :hidden, html: {id: "edit-answer-#{answer.id}"} do |f|
+        = f.label :body
+        = f.text_area :body
+        = f.submit 'Save'

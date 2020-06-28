@@ -1,0 +1,5 @@
+p= link_to 'Create question', new_question_path
+ul
+  -@questions.each do |question|
+    li
+      =link_to question.title, question

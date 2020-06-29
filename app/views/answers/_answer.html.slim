@@ -4,7 +4,7 @@
     - if answer.best?
       span = 'The Best!'
     - elsif current_user&.author_of?(answer.question)
-      = link_to 'Choose as the best', '#', class: 'choose-best-answer-link', data: {answer: answer.id}
+      = link_to 'Choose as the best', best_answer_path(answer), method: :patch, remote: true
     - if current_user&.author_of?(answer)
       = link_to 'Delete answer', answer_path(answer), method: :delete, remote: true
       = link_to 'Edit answer', '#', class: 'edit-answer-link', data: {answer: answer.id}

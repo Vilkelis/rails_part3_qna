@@ -5,38 +5,34 @@ class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_question, only: %i[new create]
   before_action :load_answer, only: %i[update destroy best]
-  before_action :clear_flash, only: %i[create destroy update]
 
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
-    flash[:notice] = 'Answer created.' if @answer.save
+    flash.now[:notice] = 'Answer created.' if @answer.save
   end
 
   def destroy
     if current_user.author_of?(@answer)
-      flash[:notice] = 'Answer deleted successfully.' if @answer.destroy
+      flash.now[:notice] = 'Answer deleted successfully.' if @answer.destroy
     else
-      flash[:alert] = 'You can delete only your own answers.'
+      flash.now[:alert] = 'You can delete only your own answers.'
     end
   end
 
   def update
     if current_user.author_of?(@answer)
-      flash[:notice] = 'Answer updated.' if @answer.update(answer_params)
+      flash.now[:notice] = 'Answer updated.' if @answer.update(answer_params)
     else
-      flash[:alert] = 'You can update only your own answers.'
+      flash.now[:alert] = 'You can update only your own answers.'
     end
   end
 
   def best
     if current_user.author_of?(@answer.question)
-      ActiveRecord::Base.transaction do
-        @answer.question.answers.where("id <> ?", @answer.id).update(best: false)
-        @answer.update(best: true)
-      end
+      @answer.update(best: true)
     else
-      flash[:alert] = 'You cannot set answer as the best, because you are not the question author.'
+      flash.now[:alert] = 'You cannot set answer as the best, because you are not the question author.'
     end
   end
 
@@ -52,9 +48,5 @@ class AnswersController < ApplicationController
 
   def load_answer
     @answer = Answer.find(params[:id])
-  end
-
-  def clear_flash
-    flash.clear
   end
 end

@@ -20,7 +20,7 @@ RSpec.describe Answer, type: :model do
     context 'user set the best to true' do
       before do
         best_answer
-        answer_for_best.update(best:true)
+        answer_for_best.make_best
       end
 
       it 'the best attribute sets to true' do

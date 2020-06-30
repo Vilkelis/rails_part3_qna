@@ -7,13 +7,13 @@ class Answer < ApplicationRecord
 
   validates :body, presence: true
 
-  after_save :after_save_update_best_for_answers
-
   default_scope { order(best: :desc, created_at: :desc) }
 
-  private
-
-  def after_save_update_best_for_answers
-    question.answers.where.not(id: id).update(best: false) if best?
+  def make_best
+    transaction do
+      question.answers.where.not(id: id).update_all(best: false)
+      self.best = true
+      save!
+    end
   end
 end

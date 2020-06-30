@@ -30,7 +30,7 @@ class AnswersController < ApplicationController
 
   def best
     if current_user.author_of?(@answer.question)
-      @answer.update(best: true)
+      @answer.make_best
     else
       flash.now[:alert] = 'You cannot set answer as the best, because you are not the question author.'
     end

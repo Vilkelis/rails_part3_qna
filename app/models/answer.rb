@@ -11,9 +11,8 @@ class Answer < ApplicationRecord
 
   def make_best
     transaction do
-      question.answers.where.not(id: id).update_all(best: false)
-      self.best = true
-      save!
+      question.answers.where.not(id: id).each{ |record| record.update!(best: false) }
+      update!(best: true)
     end
   end
 end

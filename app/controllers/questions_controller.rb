@@ -3,7 +3,7 @@
 # Questions controller
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show destroy]
+  before_action :load_question, only: %i[show update destroy]
 
   def index
     @questions = Question.all
@@ -19,8 +19,6 @@ class QuestionsController < ApplicationController
     @question.user = current_user
     if @question.save
       redirect_to @question, notice: 'Question created.'
-    else
-      render :new
     end
   end
 
@@ -34,6 +32,15 @@ class QuestionsController < ApplicationController
       redirect_to questions_path, notice: 'Question deleted successfully.'
     else
       redirect_to @question, alert: 'You can delete only your own questions.'
+    end
+  end
+
+  def update
+    flash.clear
+    if current_user.author_of?(@question)
+      flash.now[:notice] = 'Question updated.' if @question.update(question_params)
+    else
+      flash.now[:alert] = 'You can update only your own questions.'
     end
   end
 

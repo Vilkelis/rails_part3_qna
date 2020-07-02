@@ -4,24 +4,35 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_question, only: %i[new create]
-  before_action :load_answer, only: %i[destroy]
+  before_action :load_answer, only: %i[update destroy best]
 
   def create
     @answer = @question.answers.new(answer_params)
     @answer.user = current_user
-    if @answer.save
-      redirect_to @question, notice: 'Answer created.'
-    else
-      render 'questions/show'
-    end
+    flash.now[:notice] = 'Answer created.' if @answer.save
   end
 
   def destroy
     if current_user.author_of?(@answer)
-      @answer.destroy!
-      redirect_to @answer.question, notice: 'Answer deleted successfully.'
+      flash.now[:notice] = 'Answer deleted successfully.' if @answer.destroy
     else
-      redirect_to @answer.question, alert: 'You can delete only your own answers.'
+      flash.now[:alert] = 'You can delete only your own answers.'
+    end
+  end
+
+  def update
+    if current_user.author_of?(@answer)
+      flash.now[:notice] = 'Answer updated.' if @answer.update(answer_params)
+    else
+      flash.now[:alert] = 'You can update only your own answers.'
+    end
+  end
+
+  def best
+    if current_user.author_of?(@answer.question)
+      @answer.make_best
+    else
+      flash.now[:alert] = 'You cannot set answer as the best, because you are not the question author.'
     end
   end
 

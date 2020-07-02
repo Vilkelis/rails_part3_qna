@@ -31,30 +31,89 @@ RSpec.describe QuestionsController, type: :controller do
 
     context 'with valid attributes' do
       it 'saves a new question in the database' do
-        expect { post :create, params: { question: attributes_for(:question) } }
+        expect { post :create, params: { question: attributes_for(:question), format: :js } }
           .to change(Question, :count).by(1)
       end
 
       it 'user of created question equals to logged user' do
-        post :create, params: { question: attributes_for(:question) }
+        post :create, params: { question: attributes_for(:question), format: :js  }
         expect(assigns(:question).user_id).to eq(user.id)
       end
 
       it 'redirects to show view' do
-        post :create, params: { question: attributes_for(:question) }
+        post :create, params: { question: attributes_for(:question), format: :js  }
         expect(response).to redirect_to assigns(:question)
       end
     end
 
     context 'with invalid attributes' do
       it 'does not save the question' do
-        expect { post :create, params: { question: attributes_for(:question, :invalid) } }
+        expect { post :create, params: { question: attributes_for(:question, :invalid), format: :js } }
           .to_not change(Question, :count)
       end
 
-      it 're-renders new view' do
-        post :create, params: { question: attributes_for(:question, :invalid) }
-        expect(response).to render_template :new
+      it 'renders create.js' do
+        post :create, params: { question: attributes_for(:question, :invalid), format: :js }
+        expect(response).to render_template :create
+      end
+    end
+  end
+
+  describe 'PATCH #update' do
+
+    context 'question author tries to update question' do
+      before { login(question.user) }
+
+      context 'with valid atributes' do
+        before { patch :update, params: { id: question, question: { title: 'Test title', body: 'Test body' }, format: :js } }
+
+        it 'changes question attributes' do
+          question.reload
+
+          expect(question.title).to eq 'Test title'
+          expect(question.body).to eq 'Test body'
+        end
+
+        it 'renders update view' do
+          expect(response).to render_template :update
+        end
+      end
+
+      context 'with invalid atributes' do
+        before { patch :update, params: { id: question, question: { title: '', body: '' }, format: :js } }
+
+        it 'does not change question attributes' do
+          old_body = question.body
+          old_title = question.title
+          question.reload
+
+          expect(question.title).to eq old_title
+          expect(question.body).to eq old_body
+        end
+
+        it 'renders update view' do
+          expect(response).to render_template :update
+        end
+      end
+    end
+
+    context 'not the question author tries to update question' do
+      before do
+        login(invalid_user)
+        patch :update, params: { id: question, question: { title: 'Test title', body: 'Test body' }, format: :js }
+      end
+
+      it 'does not change question attributes' do
+        old_body = question.body
+        old_title = question.title
+        question.reload
+
+        expect(question.title).to eq old_title
+        expect(question.body).to eq old_body
+      end
+
+      it 'renders update view' do
+        expect(response).to render_template :update
       end
     end
   end

@@ -52,6 +52,19 @@ feature 'Only authenticated user can edit answer from question page', '
       expect(page).to_not have_link 'Edit answer'
     end
 
+    scenario 'tries to add files to owned him answer' do
+      visit_question_page(question, question.user)
+      within '.question' do
+        click_on "Edit question"
+
+        attach_file 'File', ["#{Rails.root}/spec/rails_helper.rb","#{Rails.root}/spec/spec_helper.rb"]
+
+        click_on 'Save'
+
+        expect(page).to have_link "rails_helper.rb"
+        expect(page).to have_link "spec_helper.rb"
+      end
+    end
   end
 
 

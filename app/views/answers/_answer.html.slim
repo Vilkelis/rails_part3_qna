@@ -8,7 +8,19 @@
     - if current_user&.author_of?(answer)
       = link_to 'Delete answer', answer_path(answer), method: :delete, remote: true
       = link_to 'Edit answer', '#', class: 'edit-answer-link', data: {answer: answer.id}
+    - if answer.files.attached?
+      - answer.files.each do |file|
+        p class="attached_file" id="answer-#{answer.id}-file-#{file.id}"
+          = link_to file.filename.to_s, url_for(file)
+          - if current_user&.author_of?(answer)
+            = link_to 'Delete file', delete_file_answer_path(answer,file:file), method: :delete, remote: true
+    - if current_user&.author_of?(answer)
       = form_with model: answer, class: :hidden, html: {id: "edit-answer-#{answer.id}"} do |f|
-        = f.label :body
-        = f.text_area :body
-        = f.submit 'Save'
+        p
+          = f.label :body
+          = f.text_area :body
+        p
+			    = f.label :files
+			    = f.file_field :files, multiple: true
+        p
+          = f.submit 'Save'

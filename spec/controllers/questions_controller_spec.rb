@@ -7,6 +7,7 @@ RSpec.describe QuestionsController, type: :controller do
   let(:questions) { create_list(:question, 4) }
   let(:user) { create(:user) }
   let(:invalid_user) { create(:user) }
+  let(:question_with_files) { create(:question, :with_files) }
 
   describe 'GET #new' do
     before { login(user) }
@@ -171,6 +172,33 @@ RSpec.describe QuestionsController, type: :controller do
       it 'redirects to question page' do
         delete :destroy, params: { id: question }
         expect(response).to redirect_to question
+      end
+    end
+  end
+
+  describe 'DELETE #delete_file' do
+    context 'author of the question' do
+      before { login(question_with_files.user) }
+
+      it 'deletes file' do
+        files_count = delete_question_files(question_with_files)
+        expect(question_with_files.files.count).to be_zero
+      end
+    end
+
+    context 'not author of the question' do
+      before { login(invalid_user) }
+
+      it 'deletes file' do
+        files_count = delete_question_files(question_with_files)
+        expect(question_with_files.files.count).to eq files_count
+      end
+    end
+
+    context 'not logged in user' do
+      it 'deletes file' do
+        files_count = delete_question_files(question_with_files)
+        expect(question_with_files.files.count).to eq files_count
       end
     end
   end

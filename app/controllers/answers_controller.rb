@@ -4,7 +4,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_question, only: %i[new create]
-  before_action :load_answer, only: %i[update destroy best]
+  before_action :load_answer, only: %i[update destroy best delete_file]
 
   def create
     @answer = @question.answers.new(answer_params)
@@ -36,10 +36,24 @@ class AnswersController < ApplicationController
     end
   end
 
+  def delete_file
+    if current_user.author_of?(@answer)
+      @file = @answer.files.find_by_id(params[:file])
+      @file.purge
+      if !@file.persisted?
+        flash.now[:notice] = "File #{@file.filename.to_s} deleted."
+      else
+        flash.now[:alert] = "Can't delete file #{@file.filename.to_s}."
+      end
+    else
+      flash.now[:alert] = 'You can delete attached files from only your own answers.'
+    end
+  end
+
   private
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 
   def load_question

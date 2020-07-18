@@ -34,10 +34,10 @@ Also only author of answer can remove attached files.
         expect(page).to have_link 'Delete file'
 
         answer.files.each do |file|
-          within "#answer-#{answer.id}-file-#{file.id}" do
+          within "#Answer-#{answer.id}-file-#{file.id}" do
             click_on 'Delete file'
           end
-          expect(page).to have_no_selector  "#answer-#{answer.id}-file-#{file.id}"
+          expect(page).to have_no_selector  "#Answer-#{answer.id}-file-#{file.id}"
         end
 
         expect(page).to have_no_link 'Delete file'

@@ -33,11 +33,11 @@ Also only author of question can remove attached files.
         expect(page).to have_link 'Delete file'
 
         question_with_files.files.each do |file|
-          within "#question-file-#{file.id}" do
+          within "#Question-#{question_with_files.id}-file-#{file.id}" do
             click_on 'Delete file'
           end
 
-          expect(page).to have_no_selector  "#question-file-#{file.id}"
+          expect(page).to have_no_selector  "#Question-#{question_with_files.id}-file-#{file.id}"
         end
 
         expect(page).to have_no_link 'Delete file'

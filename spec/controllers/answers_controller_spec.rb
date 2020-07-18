@@ -8,7 +8,6 @@ RSpec.describe AnswersController, type: :controller do
   let(:user) { create(:user) }
   let(:answer) { create(:answer) }
   let(:invalid_user) { create(:user) }
-  let(:answer_with_files) { create(:answer, :with_files) }
 
   describe 'POST #create' do
     before { login(user) }
@@ -208,30 +207,4 @@ RSpec.describe AnswersController, type: :controller do
 
   end
 
-  describe 'DELETE #delete_file' do
-    context 'author of the answer' do
-      before { login(answer_with_files.user) }
-
-      it 'deletes file' do
-        files_count = delete_answer_files(answer_with_files)
-        expect(answer_with_files.files.count).to be_zero
-      end
-    end
-
-    context 'not author of the answer' do
-      before { login(invalid_user) }
-
-      it 'deletes file' do
-        files_count = delete_answer_files(answer_with_files)
-        expect(answer_with_files.files.count).to eq files_count
-      end
-    end
-
-    context 'not logged in user' do
-      it 'deletes file' do
-        files_count = delete_answer_files(answer_with_files)
-        expect(answer_with_files.files.count).to eq files_count
-      end
-    end
-  end
 end

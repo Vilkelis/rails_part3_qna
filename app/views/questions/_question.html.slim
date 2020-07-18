@@ -2,11 +2,7 @@ h1 = question.title
 div = question.body
 - if @question.files.attached?
   - @question.files.each do |file|
-    p class="attached_file" id="question-file-#{file.id}"
-      = link_to file.filename.to_s, url_for(file)
-      - if current_user&.author_of?(@question)
-        = link_to 'Delete file', delete_file_question_path(@question,file:file), method: :delete, remote: true
-
+    = render partial: '/shared/attachments', locals: {file: file, file_owner: @question}
 
 - if current_user&.author_of?(@question)
   = link_to 'Delete question', question_path(@question), method: :delete

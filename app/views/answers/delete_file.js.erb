@@ -1,5 +1,0 @@
-$('.answer-errors').html('<%= render 'shared/errors', resource: @file %>');
-$('.flash').html('<%= j render 'shared/flash' %>');
-<% unless @file.errors.present? %>
-  $('#answer-<%= @answer.id %>-file-<%= @file.id %>').remove();
-<% end %>

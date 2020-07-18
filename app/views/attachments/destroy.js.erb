@@ -1,0 +1,5 @@
+$('.<%= @file_owner.class.name %>-<%= @file_owner.id %>-errors').html('<%= render 'shared/errors', resource: @file %>');
+$('.flash').html('<%= j render 'shared/flash' %>');
+<% unless @file.errors.present? %>
+  $('#<%= @file_owner.class.name %>-<%= @file_owner.id %>-file-<%= @file.id %>').remove();
+<% end %>

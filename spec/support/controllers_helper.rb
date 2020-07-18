@@ -10,7 +10,7 @@ module ControllersHelper
   def delete_question_files(question_with_files)
     files_count = question_with_files.files.count
     question_with_files.files.each do |file|
-      delete :delete_file, params: { file: file.id, id: question_with_files }, format: :js
+      delete :destroy, params: { id: file.id }, format: :js
     end
     question_with_files.reload
     files_count
@@ -19,7 +19,7 @@ module ControllersHelper
   def delete_answer_files(answer_with_files)
     files_count = answer_with_files.files.count
     answer_with_files.files.each do |file|
-      delete :delete_file, params: { file: file.id, id: answer_with_files }, format: :js
+      delete :destroy, params: { id: file.id }, format: :js
     end
     answer_with_files.reload
     files_count

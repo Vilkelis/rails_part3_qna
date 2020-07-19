@@ -8,6 +8,7 @@ but can't edit not owned him questions.
 " do
   given(:another_user) { create(:user) }
   given(:question) { create(:question) }
+  given(:question_with_files) { create(:question,:with_files) }
 
   describe 'Authenticated user', js: true do
     scenario 'tries to edit your own question' do

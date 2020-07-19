@@ -1,0 +1,4 @@
+p class="attached_file" id="#{file_owner.class.name}-#{file_owner.id}-file-#{file.id}"
+  = link_to file.filename.to_s, url_for(file)
+  - if current_user&.author_of?(file_owner)
+    = link_to 'Delete file', attachment_path(file), method: :delete, remote: true

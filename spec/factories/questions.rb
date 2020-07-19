@@ -10,6 +10,11 @@ FactoryBot.define do
       title { nil }
     end
 
+    trait :with_files do
+      files { [ Rack::Test::UploadedFile.new("#{Rails.root}/spec/rails_helper.rb"),
+                Rack::Test::UploadedFile.new("#{Rails.root}/spec/spec_helper.rb") ] }
+    end
+
     factory :question_with_answers do
       transient do
         answers_count { 5 }

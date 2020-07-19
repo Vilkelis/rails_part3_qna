@@ -3,7 +3,7 @@
 # Questions controller
 class QuestionsController < ApplicationController
   before_action :authenticate_user!, except: %i[index show]
-  before_action :load_question, only: %i[show update destroy]
+  before_action :load_question, only: %i[show update destroy delete_file]
 
   def index
     @questions = Question.all
@@ -47,10 +47,10 @@ class QuestionsController < ApplicationController
   private
 
   def question_params
-    params.require(:question).permit(:title, :body)
+    params.require(:question).permit(:title, :body, files: [])
   end
 
   def load_question
-    @question = Question.find(params[:id])
+    @question = Question.with_attached_files.find(params[:id])
   end
 end

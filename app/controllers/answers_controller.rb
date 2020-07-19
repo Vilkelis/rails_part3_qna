@@ -4,7 +4,7 @@
 class AnswersController < ApplicationController
   before_action :authenticate_user!
   before_action :load_question, only: %i[new create]
-  before_action :load_answer, only: %i[update destroy best]
+  before_action :load_answer, only: %i[update destroy best delete_file]
 
   def create
     @answer = @question.answers.new(answer_params)
@@ -39,7 +39,7 @@ class AnswersController < ApplicationController
   private
 
   def answer_params
-    params.require(:answer).permit(:body)
+    params.require(:answer).permit(:body, files: [])
   end
 
   def load_question
